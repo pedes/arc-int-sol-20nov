@@ -1,11 +1,22 @@
 ```mermaid
 sequenceDiagram
-Alice->>John: Hello John, how are you?
-loop Healthcheck
-    John->>John: Fight against hypochondria
-end
-Note right of John: Rational thoughts!
-John-->>Alice: Great!
-John->>Bob: How about you?
-Bob-->>John: Jolly good!
+    participant API as "Your API"
+    participant SAP as "SAP System"
+    participant Database as "Database"
+    
+    API->>SAP: Request Orders Data
+    Note over SAP: SAP processes the request\nand retrieves orders data
+    
+    SAP-->>API: Orders Data
+    API->>API: Transform Data Structure
+    
+    alt Data Transformation Successful
+        API-->>Database: Store Transformed Data
+        Note over Database: Data is stored in the database
+        Database-->>API: Confirmation: Data Stored Successfully
+        API-->>API: Respond to Client with Data Stored
+    else Data Transformation Failed
+        API-->>API: Handle Error
+        API-->>API: Respond to Client with Error Message
+    end
 ```
